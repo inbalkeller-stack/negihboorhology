@@ -62,6 +62,30 @@
     window.addEventListener("pageshow", function (e) { if (e.persisted) stop(); });
   }
 
+  // phone home menu: "x" hides the neighbourhood buttons, tap again to bring them back
+  var mMenu = document.getElementById("m-menu"), mToggle = document.getElementById("m-toggle");
+  if (mMenu && mToggle) {
+    var setMenuH = function () {
+      document.documentElement.style.setProperty("--m-menu-h", mMenu.offsetHeight + "px");
+    };
+    mToggle.addEventListener("click", function () {
+      var collapsed = mMenu.classList.toggle("is-collapsed");
+      mToggle.textContent = collapsed ? "שכונות" : "x";
+      mToggle.setAttribute("aria-expanded", String(!collapsed));
+      mToggle.setAttribute("aria-label", collapsed ? "הצגת התפריט" : "הסתרת התפריט");
+      setMenuH();
+    });
+    window.addEventListener("resize", setMenuH);
+    setMenuH();
+  }
+  // bold while pressing — :active alone is unreliable on iOS, so mirror it with a class
+  document.querySelectorAll(".press").forEach(function (el) {
+    var on = function () { el.classList.add("is-pressed"); };
+    var off = function () { el.classList.remove("is-pressed"); };
+    el.addEventListener("pointerdown", on);
+    ["pointerup", "pointercancel", "pointerleave"].forEach(function (t) { el.addEventListener(t, off); });
+  });
+
   // about / credits on the home page
   document.querySelectorAll("[data-dialog]").forEach(function (btn) {
     btn.addEventListener("click", function () {

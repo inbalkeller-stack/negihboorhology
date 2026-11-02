@@ -75,6 +75,7 @@ a { color: inherit; }
 .nav a[aria-current="page"] { background: rgba(255,255,255,.18); }
 .nav .nav-home { display: none; }
 .stats-bar { display: none; }
+.m-menu, .cover-sub { display: none; }
 
 /* ---------- Home / cover (Figma "מסך ראשי") ---------- */
 body.home { background: var(--red); }
@@ -452,29 +453,52 @@ dialog[open] { animation: pop .18s ease-out; }
   .stats-btn:active { background: #00702f; }
   .stats-btn:focus-visible { outline: 3px solid var(--pink); }
 
-  /* home page: the cover art has the title drawn in its middle, so show its
-     figures-only side on narrow screens instead of a centred crop */
-  .cover-bg { object-position: 0% 50%; }
-  .cover { place-items: center; padding: 88px 0 32px; }
+  /* ---- home page on phones (mobile mockup) ---- */
+  .cover-bg { object-position: 0% 50%; }   /* figures-only side of the cover art */
+  .cover { padding: 0 0 var(--m-menu-h, 230px); place-items: center; }
   .cover-center { margin-top: 0; width: 100%; }
-  .cover-title { font-size: clamp(56px, 17vw, 120px); }
-  .cover .nav { width: min(100% - 32px, 440px); margin-top: 24px; }
-  .cover .nav ul {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: rgba(60, 56, 56, .55);
+  .cover-title { font-size: clamp(56px, 17vw, 120px); background: none; padding: 0; }
+  .cover-sub {
+    display: block; margin: 6px 0 0;
+    color: #fff; font-size: clamp(22px, 7vw, 34px); font-weight: 300; line-height: 1.2;
   }
-  .cover .nav a {
-    flex: 1;
-    height: 100%;
-    min-height: 48px;
-    padding: 8px 6px;
-    font-size: 16px;
-    white-space: normal;
-    text-align: center;
+  .cover .nav, .corner-about { display: none; }
+
+  .m-menu {
+    display: block;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
+    padding-bottom: env(safe-area-inset-bottom);
   }
-  .cover .nav li:last-child { display: none; } /* arrow is redundant here */
-  .corner-btn { top: 16px; width: 60px; font-size: 21px; }
+  .m-row { display: flex; }
+  .m-top { justify-content: space-between; align-items: flex-end; }
+  .m-links .m-row + .m-row { margin-top: -1px; }
+  .press {
+    font-family: inherit; font-weight: 300; color: #fff;
+    border: 1px solid #fff; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: font-weight .05s;
+  }
+  .press:active, .press.is-pressed { font-weight: 700; }   /* bold while pressing */
+  .m-link {
+    flex: 1 1 auto;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 64px; padding: 0 12px; margin-inline-start: -1px;
+    background: rgba(98, 70, 68, .78);
+    font-size: clamp(16px, 4.9vw, 21px);
+    text-decoration: none; white-space: nowrap;
+  }
+  .m-credits {
+    width: 50%; min-height: 58px;
+    background: var(--green);
+    font-size: clamp(18px, 5.3vw, 23px); font-weight: 700;   /* drawn bold in the mockup */
+  }
+  .m-close {
+    width: 88px; min-height: 52px; margin: 0 0 4px 0;
+    background: rgba(140, 118, 118, .7);
+    font-size: 22px; font-weight: 700; text-transform: lowercase;
+  }
+  .m-menu.is-collapsed .m-links { display: none; }
+  .m-menu.is-collapsed .m-close { font-size: 17px; }
 
   /* dialogs: close button inside the screen */
   .dialog-close { top: 8px; left: 8px; }

@@ -145,6 +145,26 @@ def build_intro():
 </div>
 """
 
+# ---- Phone home menu (mobile mockup): rows exactly as drawn, right → left ----
+M_ROWS = [["ramat-aviv", "neve-sharet"],
+          ["florentin", "shapira", "lev-tlv"],
+          ["neve-shaanan", "yad-eliyahu", "old-north"]]
+
+def build_mobile_menu():
+    by = {pg["slug"]: pg for pg in PAGES}
+    rows = []
+    for row in M_ROWS:
+        cells = "".join(f'<a class="m-link press" href="{s}/">{html.escape(by[s]["nav"])}</a>' for s in row)
+        rows.append(f'<div class="m-row">{cells}</div>')
+    return f"""<div class="m-menu" id="m-menu">
+  <div class="m-row m-top">
+    <button class="m-close press" type="button" id="m-toggle" aria-expanded="true" aria-controls="m-links" aria-label="הסתרת התפריט">x</button>
+    <button class="m-credits press" type="button" data-dialog="about-dialog">קרדיטים</button>
+  </div>
+  <div class="m-links" id="m-links">{''.join(rows)}</div>
+</div>
+"""
+
 def build_home():
     h = head(SITE_TITLE, 0, "home")
     h += build_intro()
@@ -153,8 +173,10 @@ def build_home():
   <button class="corner-btn corner-about" type="button" data-dialog="about-dialog">אודות</button>
   <div class="cover-center">
     <h1 class="cover-title" id="cover-title" tabindex="0" role="button" aria-controls="intro">{SITE_TITLE}</h1>
+    <p class="cover-sub">מאת ענבל קלר</p>
     {nav(0)}
   </div>
+  {build_mobile_menu()}
 </main>
 
 <dialog class="info-dialog about" id="about-dialog" aria-labelledby="about-title">
