@@ -54,7 +54,7 @@
       title.classList.remove("is-hot");
       document.body.style.overflow = "";
     };
-    title.addEventListener("mouseenter", play);
+    // hover only previews (pink, via CSS); nothing navigates until a click / tap / Enter
     title.addEventListener("click", play);
     title.addEventListener("keydown", function (e) {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(); }
