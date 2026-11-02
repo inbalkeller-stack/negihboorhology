@@ -232,16 +232,18 @@ dialog[open] { animation: pop .18s ease-out; }
 
 .dialog-close {
   position: absolute; z-index: 1;
-  top: -18px; left: -18px;
-  width: 40px; height: 40px;
+  top: -26px; left: -26px;
+  width: 52px; height: 52px;
+  padding: 0;
   border-radius: 50%;
   border: 2px solid #fff;
   background: var(--green);
   color: #fff;
-  font-size: 26px; line-height: 1;
   cursor: pointer;
-  display: grid; place-items: center;
+  display: grid; place-items: center;   /* the × sits exactly in the middle */
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
 }
+.dialog-close svg { display: block; width: 24px; height: 24px; }
 .dialog-close:hover, .dialog-close:focus-visible { background: var(--pink); }
 
 /* stats panel (Figma "… טקסט" frames, 273 x 819) */
@@ -265,15 +267,20 @@ dialog[open] { animation: pop .18s ease-out; }
 }
 .info-body p { margin: 0; }
 .about .info-body {
-  /* Figma "קרדיטים": green box, white text, first three lines bold */
-  width: min(1000px, calc(100vw - 32px));
-  padding: clamp(28px, 6vw, 80px) clamp(22px, 6vw, 96px);
+  /* Figma "קרדיטים": green box, white text, first three lines bold.
+     Golden-ratio box: width : height = 1.618 : 1 */
+  --phi: 1.618;
+  width: min(640px, calc(100vw - 48px));
+  aspect-ratio: var(--phi) / 1;      /* grows taller only if the text needs it (phones) */
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 0 calc(100% / var(--phi) / var(--phi) / var(--phi) / 2); /* side margins follow the same ratio */
+  box-sizing: border-box;
   background: var(--green);
   border: 2px solid #fff;
   color: #fff;
-  font-size: clamp(19px, 2.3vw, 36px);
+  font-size: clamp(14px, 1.3vw, 19px);
   font-weight: 300;
-  line-height: 1.45;
+  line-height: 1.618;
   text-align: right;
 }
 .about .info-body .strong { font-weight: 700; }
@@ -471,6 +478,7 @@ dialog[open] { animation: pop .18s ease-out; }
 
   /* dialogs: close button inside the screen */
   .dialog-close { top: 8px; left: 8px; }
-  .info-dialog .dialog-close { top: -14px; left: -6px; }
+  .info-dialog .dialog-close { top: -22px; left: -10px; }
+  .about .info-body { padding: 18px 20px; font-size: 14px; line-height: 1.5; }
   .panel-img { height: min(819px, calc(100dvh - 32px)); }
 }

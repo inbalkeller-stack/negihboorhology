@@ -101,7 +101,7 @@ def nav(depth, current=None):
 def dialog(depth):
     return """
 <dialog class="panel-dialog" id="panel-dialog" aria-label="נתוני השכונה">
-  <button class="dialog-close" type="button" aria-label="סגירה">&times;</button>
+  <button class="dialog-close" type="button" aria-label="סגירה"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg></button>
   <img class="panel-img" alt="">
 </dialog>
 """
@@ -158,7 +158,7 @@ def build_home():
 </main>
 
 <dialog class="info-dialog about" id="about-dialog" aria-labelledby="about-title">
-  <button class="dialog-close" type="button" aria-label="סגירה">&times;</button>
+  <button class="dialog-close" type="button" aria-label="סגירה"><svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M5 5L19 19M19 5L5 19" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" fill="none"/></svg></button>
   <div class="info-body">
     <p class="strong" id="about-title">איורים מאת ענבל קלר.</p>
     <p class="strong">הופק במסגרת קורס איור ספרים בהנחיית נעמה בנזימן,</p>
