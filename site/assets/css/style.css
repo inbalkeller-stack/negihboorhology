@@ -307,8 +307,10 @@ dialog[open] { animation: pop .18s ease-out; }
 
 /* ---------- Loading animation (Figma frames 10:126 → 10:937) ---------- */
 :root {
-  --intro-step: 450ms;   /* time between frames of the sequence */
-  --intro-pop: 420ms;    /* each burst's pop-in */
+  /* timing read off the prototype recording */
+  --intro-lead: 600ms;   /* the single burst beside the title */
+  --intro-step: 130ms;   /* time between frames of the fill-up */
+  --intro-pop: 380ms;    /* each burst's pop-in */
 }
 .intro {
   position: fixed; inset: 0; z-index: 50;
@@ -317,7 +319,7 @@ dialog[open] { animation: pop .18s ease-out; }
   transition: opacity .6s ease, visibility .6s;
 }
 .intro[hidden] { display: none; }
-.intro:not([hidden]) { animation: intro-in .2s ease both; }
+.intro:not([hidden]) { animation: intro-in .3s ease both; }  /* dissolve from the cover */
 @keyframes intro-in { from { opacity: 0; } }
 .intro-stage {
   /* the 1728 x 1117 frame, scaled to cover the screen */
@@ -347,44 +349,22 @@ dialog[open] { animation: pop .18s ease-out; }
   opacity: 0;
   transform: scale(.35) rotate(-25deg);
   animation: burst-in var(--intro-pop) cubic-bezier(.2, .9, .3, 1.25) forwards;
-  animation-delay: calc(var(--step) * var(--intro-step) + var(--k) * 45ms + 250ms);
+  animation-delay: calc(var(--intro-lead) + var(--step) * var(--intro-step) + var(--k) * 25ms);
 }
 @keyframes burst-in {
   to { opacity: 1; transform: none; }
 }
-.intro-buttons {
-  position: absolute; z-index: 1;
-  top: clamp(16px, 2.5vw, 43px);
-  right: clamp(16px, 1.6vw, 28px);
-  display: flex; align-items: flex-start; gap: clamp(10px, 1.5vw, 26px);
-  direction: ltr; /* Figma order left→right: אודות, התחלה, מאת */
-  opacity: 0;
-  animation: fade-in .5s ease forwards;
-  animation-delay: calc(var(--buttons-step) * var(--intro-step) + 250ms);
+.burst-lead {
+  /* frame 10:1125: one burst at the end of the title, spinning in */
+  position: absolute;
+  left: calc(1127 * var(--u)); top: calc(312 * var(--u));
+  width: calc(240 * var(--u)); height: calc(246 * var(--u));
+  animation: lead-in .55s cubic-bezier(.2, .9, .3, 1.2) both, lead-spin 6s linear .55s infinite;
 }
-@keyframes fade-in { to { opacity: 1; } }
-.intro-btn {
-  display: grid; place-items: center;
-  text-decoration: none;
-  border: 0; padding: 0;
-  background: var(--green);
-  color: #fff;
-  font-weight: 300;
-  cursor: pointer;
-  transition: background-color .15s, border-radius .15s;
-}
-.intro-btn.small {
-  width: clamp(56px, 4.4vw, 76px); aspect-ratio: 76.2 / 74.5;
-  font-size: clamp(19px, 1.67vw, 29px);
-}
-.intro-btn.start {
-  width: clamp(120px, 9.4vw, 162px); aspect-ratio: 162 / 107.4;
-  font-size: clamp(34px, 3vw, 52px);
-}
-.intro-btn.small:hover, .intro-btn.small:focus-visible { background: var(--pink); border-radius: 50%; }
-.intro-btn.start:hover, .intro-btn.start:focus-visible { background: var(--pink); border-radius: 59px; }
+@keyframes lead-in { from { opacity: 0; transform: scale(.3) rotate(-120deg); } }
+@keyframes lead-spin { to { transform: rotate(360deg); } }
 @media (prefers-reduced-motion: reduce) {
-  .burst, .intro-buttons { animation: none; opacity: 1; transform: none; }
+  .burst, .burst-lead { animation: none; opacity: 1; transform: none; }
 }
 
 /* ---------- Small screens ---------- */

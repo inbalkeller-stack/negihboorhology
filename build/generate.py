@@ -123,7 +123,10 @@ STEPS = [[3],[6],[1,2,7,8,9,4,5],[10,11,12],[13,14,15],[16,17,18],[19,20,21],[22
 # stacking order in the final frame (bottom -> top)
 Z_ORDER = [1,2,3,7,8,9,29,30,31,32,33,34,35,36,10,11,12,19,20,21,16,17,18,37,38,13,14,15,4,5,39,40,41,42,6,
            22,23,24,25,26,27,28]
-BUTTONS_STEP = 5  # the אודות / התחלה / מאת buttons appear with the 6th frame
+# Prototype order (screen recording): cover → hover title (pink) → dissolve to the white loader →
+# one burst spins in beside the title (frame 10:1125) → the bursts fill the screen (10:126 … 10:937)
+# → straight on to the first neighbourhood, no button press.
+INTRO_NEXT = "neve-sharet/"
 
 def build_intro():
     step_of = {n: i for i, st in enumerate(STEPS) for n in st}
@@ -133,14 +136,11 @@ def build_intro():
         x, y = BURSTS[n]
         imgs.append(f'<img class="burst" src="assets/img/burst.webp" alt="" '
                     f'style="--x:{x};--y:{y};--step:{step_of[n]};--k:{order_in_step[n]}">')
-    return f"""<div class="intro" id="intro" role="dialog" aria-modal="true" hidden aria-label="{SITE_TITLE}" style="--steps:{len(STEPS)};--buttons-step:{BUTTONS_STEP}">
+    return f"""<div class="intro" id="intro" role="dialog" aria-modal="true" hidden aria-label="{SITE_TITLE}" data-next="{INTRO_NEXT}" style="--steps:{len(STEPS)}">
   <div class="intro-stage">
     <p class="intro-title">{SITE_TITLE}</p>
+    <img class="burst-lead" src="assets/img/burst.webp" alt="">
     {''.join(imgs)}
-  </div>
-  <div class="intro-buttons">
-    <button class="intro-btn small" type="button" data-dialog="about-dialog">אודות</button>
-    <a class="intro-btn start" id="intro-start" href="{PAGES[0]["slug"]}/">התחלה</a>
   </div>
 </div>
 """
@@ -167,6 +167,7 @@ def build_mobile_menu():
 
 def build_home():
     h = head(SITE_TITLE, 0, "home")
+    h = h.replace("</head>", f'<link rel="prefetch" href="{INTRO_NEXT}">\n<link rel="prefetch" href="assets/maps/neve-sharet.webp">\n</head>', 1)
     h += build_intro()
     h += f"""<main class="cover">
   <img class="cover-bg" src="assets/img/cover.webp" alt="" fetchpriority="high">

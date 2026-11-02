@@ -28,37 +28,41 @@
     });
   });
 
-  // cover title: hover (or tap / Enter) turns it pink and plays the loading animation
+  // cover title → pink → loader → first neighbourhood (order of the Figma prototype)
   var intro = document.getElementById("intro");
   var title = document.getElementById("cover-title");
   if (intro && title) {
-    var timer = null;
-    var play = function (fromKeyboard) {
-      if (!intro.hidden) return;
+    var PINK_HOLD = 400;      // title stays pink before the dissolve
+    var LOADER_TIME = 2700;   // lead burst + fill-up + a short hold
+    var timers = [];
+    var clear = function () { timers.forEach(clearTimeout); timers = []; };
+    var play = function () {
+      if (!intro.hidden || timers.length) return;
       title.classList.add("is-hot");
-      clearTimeout(timer);
-      timer = setTimeout(function () {
-        intro.hidden = false;               // un-hiding restarts every CSS animation from frame 1
+      timers.push(setTimeout(function () {
+        intro.hidden = false;            // un-hiding restarts every CSS animation from frame 1
         document.body.style.overflow = "hidden";
-        var start = document.getElementById("intro-start");
-        if (start && fromKeyboard === true) start.focus({ preventScroll: true });
-      }, 220);
+        var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        timers.push(setTimeout(function () {
+          location.href = intro.getAttribute("data-next");
+        }, reduce ? 800 : LOADER_TIME));
+      }, PINK_HOLD));
     };
     var stop = function () {
-      clearTimeout(timer);
+      clear();
       intro.hidden = true;
       title.classList.remove("is-hot");
       document.body.style.overflow = "";
     };
-    title.addEventListener("mouseenter", function () { play(false); });
-    title.addEventListener("click", function () { play(false); });
+    title.addEventListener("mouseenter", play);
+    title.addEventListener("click", play);
     title.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(true); }
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(); }
     });
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && !intro.hidden && !document.querySelector("dialog[open]")) stop();
+      if (e.key === "Escape" && (timers.length || !intro.hidden)) stop();
     });
-    // coming back with the browser's back button: show the cover, not the frozen animation
+    // back button from a neighbourhood: show the plain cover again
     window.addEventListener("pageshow", function (e) { if (e.persisted) stop(); });
   }
 
