@@ -288,6 +288,34 @@ dialog[open] { animation: pop .18s ease-out; }
 
 
 
+/* ---------- "scroll ↓" cursor on the neighbourhood pages (desktop) ---------- */
+.scroll-cursor { display: none; }
+@media (hover: hover) and (pointer: fine) {
+  .scroll-cursor {
+    display: flex; flex-direction: column; align-items: center;
+    position: fixed; left: 0; top: 0; z-index: 40;
+    pointer-events: none;
+    color: #fff;
+    font-family: "Heebo", var(--font);
+    line-height: 1;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, .28);
+    transform: translate(var(--cx, -999px), var(--cy, -999px)) translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity .35s ease, filter .35s ease;
+  }
+  .scroll-cursor.is-on { opacity: 1; }
+  /* dissolve once the visitor starts scrolling */
+  .scroll-cursor.is-gone { opacity: 0; filter: blur(10px); transition: opacity .9s ease, filter .9s ease; }
+  .sc-word, .sc-arrow { animation: sc-weight 2.4s ease-in-out infinite alternate; }
+  .sc-word { font-size: 64px; letter-spacing: .01em; }
+  .sc-arrow { font-size: 46px; margin-top: 6px; }
+  @keyframes sc-weight { from { font-weight: 300; } to { font-weight: 700; } }
+  /* the custom cursor replaces the arrow over the map, not over things you click */
+  .has-scroll-cursor .canvas { cursor: none; }
+  .has-scroll-cursor .canvas .label { cursor: pointer; }
+}
+@media (prefers-reduced-motion: reduce) { .sc-word, .sc-arrow { animation: none; } }
+
 /* ---------- Push-from-top transitions ---------- */
 /* between pages (cross-document View Transitions; browsers without support just navigate) */
 @view-transition { navigation: auto; }

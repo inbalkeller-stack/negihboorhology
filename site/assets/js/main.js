@@ -66,6 +66,36 @@
     window.addEventListener("pageshow", function (e) { if (e.persisted) stop(); });
   }
 
+  // neighbourhood pages: "scroll ↓" cursor that dissolves on the first scroll
+  var sc = document.querySelector(".scroll-cursor");
+  var canvas = document.querySelector(".canvas");
+  if (sc && canvas && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    var gone = false;
+    document.body.classList.add("has-scroll-cursor");
+    var move = function (e) {
+      if (gone) return;
+      sc.style.setProperty("--cx", e.clientX + "px");
+      sc.style.setProperty("--cy", e.clientY + "px");
+      // show it over the map only; hide over the nav, labels and other controls
+      var overControl = e.target.closest && e.target.closest("a, button, .nav, dialog");
+      sc.classList.toggle("is-on", canvas.contains(e.target) && !overControl);
+    };
+    var dissolve = function () {
+      if (gone) return;
+      gone = true;
+      sc.classList.add("is-gone");
+      document.body.classList.remove("has-scroll-cursor");   // the normal cursor comes back
+      setTimeout(function () { sc.remove(); }, 1000);
+    };
+    document.addEventListener("mousemove", move, { passive: true });
+    document.addEventListener("mouseleave", function () { sc.classList.remove("is-on"); });
+    window.addEventListener("scroll", function () { if (window.scrollY > 4) dissolve(); }, { passive: true });
+    window.addEventListener("wheel", dissolve, { passive: true });
+    window.addEventListener("keydown", function (e) {
+      if (["ArrowDown", "PageDown", " ", "End"].indexOf(e.key) > -1) dissolve();
+    });
+  }
+
   // phone home menu: "x" hides the neighbourhood buttons, tap again to bring them back
   var mMenu = document.getElementById("m-menu"), mToggle = document.getElementById("m-toggle");
   if (mMenu && mToggle) {

@@ -77,7 +77,7 @@ def head(title, depth, extra_class=""):
 <link rel="icon" href="{p}assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="{p}assets/css/style.css">
 </head>
 <body class="{extra_class}">
@@ -229,6 +229,7 @@ def build_page(pg):
                 f'data-name="{html.escape(lb["name"])}" aria-haspopup="dialog">'
                 f'<span>{html.escape(lb["name"])}</span><small>נתוני השכונה</small></button>\n')
     out += '  </div>\n</main>\n'
+    out += '<div class="scroll-cursor" aria-hidden="true"><span class="sc-word">scroll</span><span class="sc-arrow">&darr;</span></div>\n'
     out += dialog(d)
     out += FOOT.format(p=p)
     return out
