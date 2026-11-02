@@ -133,28 +133,26 @@ def build_intro():
         x, y = BURSTS[n]
         imgs.append(f'<img class="burst" src="assets/img/burst.webp" alt="" '
                     f'style="--x:{x};--y:{y};--step:{step_of[n]};--k:{order_in_step[n]}">')
-    return f"""<div class="intro" id="intro" role="dialog" aria-label="{SITE_TITLE}" style="--steps:{len(STEPS)};--buttons-step:{BUTTONS_STEP}">
+    return f"""<div class="intro" id="intro" role="dialog" aria-modal="true" hidden aria-label="{SITE_TITLE}" style="--steps:{len(STEPS)};--buttons-step:{BUTTONS_STEP}">
   <div class="intro-stage">
     <p class="intro-title">{SITE_TITLE}</p>
     {''.join(imgs)}
   </div>
   <div class="intro-buttons">
     <button class="intro-btn small" type="button" data-dialog="about-dialog">אודות</button>
-    <button class="intro-btn start" type="button" id="intro-start">התחלה</button>
+    <a class="intro-btn start" id="intro-start" href="{PAGES[0]["slug"]}/">התחלה</a>
   </div>
 </div>
 """
 
 def build_home():
     h = head(SITE_TITLE, 0, "home")
-    # show the loading animation once per visit; coming back from a neighbourhood skips it
-    h = h.replace("<head>", "<head>\n<script>try{if(sessionStorage.getItem('introSeen'))document.documentElement.classList.add('skip-intro')}catch(e){}</script>", 1)
     h += build_intro()
     h += f"""<main class="cover">
   <img class="cover-bg" src="assets/img/cover.webp" alt="" fetchpriority="high">
   <button class="corner-btn corner-about" type="button" data-dialog="about-dialog">אודות</button>
   <div class="cover-center">
-    <h1 class="cover-title">{SITE_TITLE}</h1>
+    <h1 class="cover-title" id="cover-title" tabindex="0" role="button" aria-controls="intro">{SITE_TITLE}</h1>
     {nav(0)}
   </div>
 </main>

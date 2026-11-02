@@ -28,27 +28,38 @@
     });
   });
 
-  // loading animation → "התחלה" reveals the home page
+  // cover title: hover (or tap / Enter) turns it pink and plays the loading animation
   var intro = document.getElementById("intro");
-  if (intro && !document.documentElement.classList.contains("skip-intro")) {
-    document.body.style.overflow = "hidden";
-    var start = document.getElementById("intro-start");
-    var done = function () {
-      try { sessionStorage.setItem("introSeen", "1"); } catch (e) {}
-      document.body.style.overflow = "";
-      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (document.startViewTransition && !reduce) {
-        // the home page pushes in from the top, like the page-to-page transition
-        document.startViewTransition(function () { intro.remove(); });
-      } else {
-        intro.classList.add("is-leaving");
-        setTimeout(function () { intro.remove(); }, 700);
-      }
+  var title = document.getElementById("cover-title");
+  if (intro && title) {
+    var timer = null;
+    var play = function (fromKeyboard) {
+      if (!intro.hidden) return;
+      title.classList.add("is-hot");
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        intro.hidden = false;               // un-hiding restarts every CSS animation from frame 1
+        document.body.style.overflow = "hidden";
+        var start = document.getElementById("intro-start");
+        if (start && fromKeyboard === true) start.focus({ preventScroll: true });
+      }, 220);
     };
-    start.addEventListener("click", done);
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" && document.body.contains(intro) && !intro.classList.contains("is-leaving") && !document.querySelector("dialog[open]")) done();
+    var stop = function () {
+      clearTimeout(timer);
+      intro.hidden = true;
+      title.classList.remove("is-hot");
+      document.body.style.overflow = "";
+    };
+    title.addEventListener("mouseenter", function () { play(false); });
+    title.addEventListener("click", function () { play(false); });
+    title.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); play(true); }
     });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !intro.hidden && !document.querySelector("dialog[open]")) stop();
+    });
+    // coming back with the browser's back button: show the cover, not the frozen animation
+    window.addEventListener("pageshow", function (e) { if (e.persisted) stop(); });
   }
 
   // about / credits on the home page

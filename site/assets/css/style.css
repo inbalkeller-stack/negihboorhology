@@ -112,6 +112,8 @@ body.home { background: var(--red); }
   padding: 0.04em 0.1em 0.08em;
   /* the red block in Figma (575x217) masks the figures behind the title */
 }
+#cover-title { cursor: pointer; transition: color .18s ease; }
+#cover-title.is-hot, #cover-title:hover, #cover-title:focus-visible { color: var(--pink); outline: none; }
 .cover-title.small { font-size: clamp(40px, 6vw, 96px); }
 .cover .nav { margin-top: clamp(16px, 2.6vw, 48px); }
 /* home nav scales with the viewport like the 1268px bar on the 1728px frame */
@@ -306,8 +308,9 @@ dialog[open] { animation: pop .18s ease-out; }
   background: #fff;
   transition: opacity .6s ease, visibility .6s;
 }
-.skip-intro .intro { display: none; }
-.intro.is-leaving { opacity: 0; visibility: hidden; }
+.intro[hidden] { display: none; }
+.intro:not([hidden]) { animation: intro-in .2s ease both; }
+@keyframes intro-in { from { opacity: 0; } }
 .intro-stage {
   /* the 1728 x 1117 frame, scaled to cover the screen */
   container-type: inline-size;
@@ -354,6 +357,7 @@ dialog[open] { animation: pop .18s ease-out; }
 @keyframes fade-in { to { opacity: 1; } }
 .intro-btn {
   display: grid; place-items: center;
+  text-decoration: none;
   border: 0; padding: 0;
   background: var(--green);
   color: #fff;
