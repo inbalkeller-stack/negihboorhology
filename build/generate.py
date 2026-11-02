@@ -36,6 +36,8 @@ PAGES = [
         {"name": "נווה שאנן", "panel": "neve-shaanan", "box": (1382, -43, 397, 394), "text": (1557.5, 138)},
      ]},
     {"slug": "yad-eliyahu", "nav": "יד אליהו/התקווה", "title": "יד אליהו והתקווה", "h": 2442, "map_rot": 0,
+     # the woman with the pink trolley was cut in the map art; her full drawing sits on top (% of the map)
+     "patches": [{"src": "img/hatikva-woman.webp", "left": 20.4164, "top": 58.6978, "width": 3.6088}],
      "labels": [
         {"name": "יד אליהו", "panel": "yad-eliyahu", "box": (1379, -47, 380, 378), "text": (1548.5, 123)},
         {"name": "התקווה", "panel": "hatikva", "box": (-34, 2156, 420, 417), "text": (151.5, 2352)},
@@ -106,8 +108,49 @@ def dialog(depth):
 
 FOOT = '<script src="{p}assets/js/main.js" defer></script>\n</body>\n</html>\n'
 
+
+# ---- Loading animation (Figma frames "מסך ראשי" 10:126 → 10:937) ----
+# Each burst: number in Figma -> (x, y) on the 1728x1117 frame. Size 317x325.
+BURSTS = {1:(33,33),2:(406,645),3:(978,113),4:(565,150),5:(954,691),6:(1250,320),7:(819,378),8:(407,378),
+  9:(705,758),10:(134,528),11:(134,808),12:(1271,596),13:(1439,119),14:(736,49),15:(578,528),16:(192,216),
+  17:(384,0),18:(1347,815),19:(1054,444),20:(1454,406),21:(-47,282),22:(623,374),23:(1213,113),24:(828,559),
+  25:(564,-56),26:(312,807),27:(-47,644),28:(1526,644),29:(542,815),30:(1052,792),31:(911,-40),32:(270,445),
+  33:(247,-12),34:(1077,308),35:(-24,853),36:(75,374),37:(1070,646),38:(810,234),39:(876,853),40:(1463,853),
+  41:(1122,-3),42:(38,-96)}
+# which frame of the sequence each burst first appears in
+STEPS = [[3],[6],[1,2,7,8,9,4,5],[10,11,12],[13,14,15],[16,17,18],[19,20,21],[22,23,24,25,26,27,28],
+         list(range(29,43))]
+# stacking order in the final frame (bottom -> top)
+Z_ORDER = [1,2,3,7,8,9,29,30,31,32,33,34,35,36,10,11,12,19,20,21,16,17,18,37,38,13,14,15,4,5,39,40,41,42,6,
+           22,23,24,25,26,27,28]
+BUTTONS_STEP = 5  # the אודות / התחלה / מאת buttons appear with the 6th frame
+
+def build_intro():
+    step_of = {n: i for i, st in enumerate(STEPS) for n in st}
+    order_in_step = {n: st.index(n) for st in STEPS for n in st}
+    imgs = []
+    for n in Z_ORDER:
+        x, y = BURSTS[n]
+        imgs.append(f'<img class="burst" src="assets/img/burst.webp" alt="" '
+                    f'style="--x:{x};--y:{y};--step:{step_of[n]};--k:{order_in_step[n]}">')
+    return f"""<div class="intro" id="intro" role="dialog" aria-label="{SITE_TITLE}" style="--steps:{len(STEPS)};--buttons-step:{BUTTONS_STEP}">
+  <div class="intro-stage">
+    <p class="intro-title">{SITE_TITLE}</p>
+    {''.join(imgs)}
+  </div>
+  <div class="intro-buttons">
+    <button class="intro-btn small" type="button" data-dialog="about-dialog">אודות</button>
+    <button class="intro-btn start" type="button" id="intro-start">התחלה</button>
+    <button class="intro-btn small" type="button" data-dialog="credits-dialog">מאת</button>
+  </div>
+</div>
+"""
+
 def build_home():
     h = head(SITE_TITLE, 0, "home")
+    # show the loading animation once per visit; coming back from a neighbourhood skips it
+    h = h.replace("<head>", "<head>\n<script>try{if(sessionStorage.getItem('introSeen'))document.documentElement.classList.add('skip-intro')}catch(e){}</script>", 1)
+    h += build_intro()
     h += f"""<main class="cover">
   <img class="cover-bg" src="assets/img/cover.webp" alt="" fetchpriority="high">
   <button class="corner-btn corner-about" type="button" data-dialog="about-dialog">אודות</button>
@@ -148,6 +191,9 @@ def build_page(pg):
     out += f'  <h1 class="sr-only">{html.escape(pg["title"])}</h1>\n'
     out += '  <div class="canvas">\n'
     out += f'  <img class="map" src="{p}assets/maps/{pg["slug"]}.webp" alt="מפה מאוירת של {html.escape(pg["title"])}" width="1728" height="{pg["h"]}">\n'
+    for pt in pg.get("patches", []):
+        out += (f'  <img class="patch" src="{p}assets/{pt["src"]}" alt="" '
+                f'style="left:{pt["left"]}%;top:{pt["top"]}%;width:{pt["width"]}%">\n')
     for lb in pg["labels"]:
         bx, by, bw, bh = inset_box(lb["box"], DEFAULT_INSET)
         hx, hy, hw, hh = inset_box(lb["box"], HOVER_INSET)

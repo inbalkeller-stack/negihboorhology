@@ -28,6 +28,23 @@
     });
   });
 
+  // loading animation → "התחלה" reveals the home page
+  var intro = document.getElementById("intro");
+  if (intro && !document.documentElement.classList.contains("skip-intro")) {
+    document.body.style.overflow = "hidden";
+    var start = document.getElementById("intro-start");
+    var done = function () {
+      try { sessionStorage.setItem("introSeen", "1"); } catch (e) {}
+      intro.classList.add("is-leaving");
+      document.body.style.overflow = "";
+      setTimeout(function () { intro.remove(); }, 700);
+    };
+    start.addEventListener("click", done);
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && document.body.contains(intro) && !document.querySelector("dialog[open]")) done();
+    });
+  }
+
   // about / credits on the home page
   document.querySelectorAll("[data-dialog]").forEach(function (btn) {
     btn.addEventListener("click", function () {
