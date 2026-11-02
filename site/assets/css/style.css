@@ -307,15 +307,14 @@ dialog[open] { animation: pop .18s ease-out; }
   .scroll-cursor.is-on { opacity: 1; }
   /* dissolve once the visitor starts scrolling */
   .scroll-cursor.is-gone { opacity: 0; filter: blur(10px); transition: opacity .9s ease, filter .9s ease; }
-  .sc-word, .sc-arrow { animation: sc-weight 2.4s ease-in-out infinite alternate; }
-  .sc-word { font-size: 64px; letter-spacing: .01em; }
-  .sc-arrow { font-size: 46px; margin-top: 6px; }
-  @keyframes sc-weight { 0%, 20% { font-weight: 300; } 45%, 55% { font-weight: 400; } 80%, 100% { font-weight: 700; } }
+  .sc-arrow { display: block; overflow: visible; filter: drop-shadow(0 1px 8px rgba(0,0,0,.3)); }
+  .sc-arrow path { stroke-width: 3; animation: sc-weight 2.4s ease-in-out infinite alternate; }
+  @keyframes sc-weight { from { stroke-width: 3; } to { stroke-width: 7.5; } }   /* regular ↔ bold */
   /* the custom cursor replaces the arrow over the map, not over things you click */
   .has-scroll-cursor .canvas { cursor: none; }
   .has-scroll-cursor .canvas .label { cursor: pointer; }
 }
-@media (prefers-reduced-motion: reduce) { .sc-word, .sc-arrow { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .sc-arrow path { animation: none; } }
 
 /* ---------- Push-from-top transitions ---------- */
 /* between pages (cross-document View Transitions; browsers without support just navigate) */

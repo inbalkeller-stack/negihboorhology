@@ -231,7 +231,7 @@ def build_page(pg):
                 f'data-name="{html.escape(lb["name"])}" aria-haspopup="dialog">'
                 f'<span>{html.escape(lb["name"])}</span><small>נתוני השכונה</small></button>\n')
     out += '  </div>\n</main>\n'
-    out += '<div class="scroll-cursor" aria-hidden="true"><span class="sc-word">scroll</span><span class="sc-arrow">&darr;</span></div>\n'
+    out += '<div class="scroll-cursor" aria-hidden="true"><svg class="sc-arrow" viewBox="0 0 48 80" width="48" height="80"><path d="M24 4V74M6 54L24 74L42 54" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/></svg></div>\n'
     out += dialog(d)
     out += FOOT.format(p=p)
     return out
