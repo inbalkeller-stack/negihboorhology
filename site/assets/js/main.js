@@ -39,7 +39,7 @@
   var panelDlg = document.getElementById("panel-dialog");
   if (panelDlg) {
     var img = panelDlg.querySelector(".panel-img");
-    document.querySelectorAll(".label[data-panel]").forEach(function (btn) {
+    document.querySelectorAll("[data-panel]").forEach(function (btn) {
       // warm the cache so the panel appears instantly
       btn.addEventListener("pointerenter", function () {
         var pre = new Image(); pre.src = btn.getAttribute("data-panel");
@@ -58,10 +58,11 @@
   var cur = document.querySelector('.stage .nav [aria-current="page"]');
   if (cur && window.matchMedia("(max-width: 900px)").matches) {
     var ul = cur.closest("ul");
-    ul.scrollLeft += cur.getBoundingClientRect().left - ul.getBoundingClientRect().left - 12;
+    var r = cur.getBoundingClientRect(), u = ul.getBoundingClientRect();
+    ul.scrollLeft += (r.left + r.width / 2) - (u.left + u.width / 2);
   }
 
-  // keyboard: ← goes to the next neighbourhood (RTL book order)
+  // keyboard: ← does what the nav arrow does
   var next = document.querySelector(".nav-next");
   document.addEventListener("keydown", function (e) {
     if (document.querySelector("dialog[open]")) return;

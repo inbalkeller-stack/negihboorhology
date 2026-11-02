@@ -87,15 +87,11 @@ def nav(depth, current=None):
     for pg in PAGES:
         cur = ' aria-current="page"' if pg["slug"] == current else ""
         items.append(f'<li><a href="{p}{pg["slug"]}/"{cur}>{html.escape(pg["nav"])}</a></li>')
-    # arrow: next page in the book
+    # arrow: on the home page it opens the first neighbourhood; everywhere else it goes home
     if current is None:
         nxt, label = f'{p}{PAGES[0]["slug"]}/', "לשכונה הראשונה"
     else:
-        i = [pg["slug"] for pg in PAGES].index(current)
-        if i + 1 < len(PAGES):
-            nxt, label = f'{p}{PAGES[i+1]["slug"]}/', "לשכונה הבאה"
-        else:
-            nxt, label = f'{p}', "חזרה לעמוד הראשי"
+        nxt, label = f'{p}', "חזרה לעמוד הראשי"
     items.append(f'<li><a class="nav-next" href="{nxt}" aria-label="{label}" title="{label}">&larr;</a></li>')
     home = "" if current is None else f'<a class="nav-home" href="{p}" aria-label="עמוד ראשי" title="עמוד ראשי">{SITE_TITLE}</a>'
     return f'<nav class="nav" aria-label="שכונות">{home}<ul>{"".join(items)}</ul></nav>'
@@ -167,6 +163,13 @@ def build_page(pg):
                 f'    <img class="sticker-hover" src="{p}assets/img/label-hover.webp" alt="" style="{hstyle}">\n'
                 f'    <span class="label-text{wrap}" style="{tstyle}">{html.escape(lb["name"])}</span>\n'
                 f'  </button>\n')
+    out += '  </div>\n'
+    # phones: the map labels get small, so the stats also open from big buttons under the map
+    out += '  <div class="stats-bar">\n'
+    for lb in pg["labels"]:
+        out += (f'    <button class="stats-btn" type="button" data-panel="{p}assets/panels/{lb["panel"]}.webp" '
+                f'data-name="{html.escape(lb["name"])}" aria-haspopup="dialog">'
+                f'<span>{html.escape(lb["name"])}</span><small>נתוני השכונה</small></button>\n')
     out += '  </div>\n</main>\n'
     out += dialog(d)
     out += FOOT.format(p=p)
