@@ -75,9 +75,7 @@ def head(title, depth, extra_class=""):
 <meta property="og:image" content="{p}assets/img/og.jpg">
 <meta name="theme-color" content="#bd242a">
 <link rel="icon" href="{p}assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap" rel="stylesheet">
+<link rel="preload" href="{p}assets/fonts/NextExitFOT-Light.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="{p}assets/css/style.css">
 </head>
 <body class="{extra_class}">
@@ -145,24 +143,25 @@ def build_intro():
 </div>
 """
 
-# ---- Phone home menu (mobile mockup): rows exactly as drawn, right → left ----
-M_ROWS = [["ramat-aviv", "neve-sharet"],
-          ["florentin", "shapira", "lev-tlv"],
-          ["neve-shaanan", "yad-eliyahu", "old-north"]]
+# ---- Phone home menu: Figma "mobile nav bar" (296:435), widths in px of the 393px frame ----
+M_ROWS = [[("neve-sharet", 178.72), ("ramat-aviv", 214.28)],
+          [("lev-tlv", 85.15), ("shapira", 188), ("florentin", 119.77)],
+          [("old-north", 116.96), ("yad-eliyahu", 166), ("neve-shaanan", 109.48)]]
 
 def build_mobile_menu():
     by = {pg["slug"]: pg for pg in PAGES}
     rows = []
     for row in M_ROWS:
-        cells = "".join(f'<a class="m-link press" href="{s}/">{html.escape(by[s]["nav"])}</a>' for s in row)
+        cells = "".join(f'<a class="m-link press" href="{s}/" style="--w:{w}">{html.escape(by[s]["nav"])}</a>' for s, w in row)
         rows.append(f'<div class="m-row">{cells}</div>')
-    return f"""<div class="m-menu" id="m-menu">
+    # rows are laid out left → right exactly as drawn
+    return f"""<nav class="m-menu" id="m-menu" aria-label="שכונות">
   <div class="m-row m-top">
-    <button class="m-close press" type="button" id="m-toggle" aria-expanded="true" aria-controls="m-links" aria-label="הסתרת התפריט">x</button>
     <button class="m-credits press" type="button" data-dialog="about-dialog">קרדיטים</button>
+    <button class="m-close press" type="button" id="m-close" aria-label="סגירת התפריט">&larr;</button>
   </div>
-  <div class="m-links" id="m-links">{''.join(rows)}</div>
-</div>
+  {''.join(rows)}
+</nav>
 """
 
 def build_home():
@@ -170,7 +169,10 @@ def build_home():
     h = h.replace("</head>", f'<link rel="prefetch" href="{INTRO_NEXT}">\n<link rel="prefetch" href="assets/maps/neve-sharet.webp">\n</head>', 1)
     h += build_intro()
     h += f"""<main class="cover">
-  <img class="cover-bg" src="assets/img/cover.webp" alt="" fetchpriority="high">
+  <picture>
+    <source media="(max-width: 900px)" srcset="assets/img/cover-mobile.webp">
+    <img class="cover-bg" src="assets/img/cover.webp" alt="" fetchpriority="high">
+  </picture>
   <button class="corner-btn corner-about" type="button" data-dialog="about-dialog">אודות</button>
   <div class="cover-center">
     <h1 class="cover-title" id="cover-title" tabindex="0" role="button" aria-controls="intro">{SITE_TITLE}</h1>

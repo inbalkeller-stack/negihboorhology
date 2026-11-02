@@ -96,21 +96,14 @@
     });
   }
 
-  // phone home menu: "x" hides the neighbourhood buttons, tap again to bring them back
-  var mMenu = document.getElementById("m-menu"), mToggle = document.getElementById("m-toggle");
-  if (mMenu && mToggle) {
-    var setMenuH = function () {
-      document.documentElement.style.setProperty("--m-menu-h", mMenu.offsetHeight + "px");
-    };
-    mToggle.addEventListener("click", function () {
-      var collapsed = mMenu.classList.toggle("is-collapsed");
-      mToggle.textContent = collapsed ? "שכונות" : "x";
-      mToggle.setAttribute("aria-expanded", String(!collapsed));
-      mToggle.setAttribute("aria-label", collapsed ? "הצגת התפריט" : "הסתרת התפריט");
-      setMenuH();
+  // phone home menu: the arrow closes it (it can only be closed)
+  var mMenu = document.getElementById("m-menu"), mClose = document.getElementById("m-close");
+  if (mMenu && mClose) {
+    mClose.addEventListener("click", function () {
+      mMenu.classList.add("is-closed");
+      mMenu.setAttribute("aria-hidden", "true");
+      mMenu.querySelectorAll("a,button").forEach(function (el) { el.setAttribute("tabindex", "-1"); });
     });
-    window.addEventListener("resize", setMenuH);
-    setMenuH();
   }
   // bold while pressing — :active alone is unreliable on iOS, so mirror it with a class
   document.querySelectorAll(".press").forEach(function (el) {

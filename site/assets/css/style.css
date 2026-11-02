@@ -2,22 +2,19 @@
 
 @font-face {
   font-family: "NextExitFOT";
-  /* add url("../fonts/NextExitFOT-Light.woff2") format("woff2") here once the file exists */
-  src: local("NextExitFOT-Light"), local("NextExitFOT Light");
+  src: url("../fonts/NextExitFOT-Light.woff2") format("woff2"), local("NextExitFOT-Light"), local("NextExitFOT Light");
   font-weight: 300;
   font-display: swap;
 }
 @font-face {
   font-family: "NextExitFOT";
-  /* add url("../fonts/NextExitFOT-Regular.woff2") format("woff2") here once the file exists */
-  src: local("NextExitFOT-Regular"), local("NextExitFOT");
+  src: url("../fonts/NextExitFOT-Regular.woff2") format("woff2"), local("NextExitFOT-Regular"), local("NextExitFOT");
   font-weight: 400;
   font-display: swap;
 }
 @font-face {
   font-family: "NextExitFOT";
-  /* add url("../fonts/NextExitFOT-Bold.woff2") format("woff2") here once the file exists */
-  src: local("NextExitFOT-Bold"), local("NextExitFOT Bold");
+  src: url("../fonts/NextExitFOT-Bold.woff2") format("woff2"), local("NextExitFOT-Bold"), local("NextExitFOT Bold");
   font-weight: 700;
   font-display: swap;
 }
@@ -28,7 +25,7 @@
   --pink: #ff35d0;
   --nav-bg: rgba(138, 138, 138, 0.24);
   --page-bg: #b3abaa;
-  --font: "NextExitFOT", "Heebo", "Arial Hebrew", Arial, sans-serif;
+  --font: "NextExitFOT", "Arial Hebrew", Arial, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -88,6 +85,10 @@ body.home { background: var(--red); }
   display: grid;
   place-items: center;
 }
+.cover picture { position: absolute; inset: 0; }
+body.home .cover { animation: cover-dissolve 1.1s ease both; }
+@keyframes cover-dissolve { from { opacity: 0; filter: blur(8px); } to { opacity: 1; filter: none; } }
+@media (prefers-reduced-motion: reduce) { body.home .cover { animation-duration: .01s; } }
 .cover-bg {
   position: absolute; inset: 0;
   width: 100%; height: 100%;
@@ -296,7 +297,7 @@ dialog[open] { animation: pop .18s ease-out; }
     position: fixed; left: 0; top: 0; z-index: 40;
     pointer-events: none;
     color: #fff;
-    font-family: "Heebo", var(--font);
+    font-family: var(--font);
     line-height: 1;
     text-shadow: 0 1px 12px rgba(0, 0, 0, .28);
     transform: translate(var(--cx, -999px), var(--cy, -999px)) translate(-50%, -50%);
@@ -309,7 +310,7 @@ dialog[open] { animation: pop .18s ease-out; }
   .sc-word, .sc-arrow { animation: sc-weight 2.4s ease-in-out infinite alternate; }
   .sc-word { font-size: 64px; letter-spacing: .01em; }
   .sc-arrow { font-size: 46px; margin-top: 6px; }
-  @keyframes sc-weight { from { font-weight: 300; } to { font-weight: 700; } }
+  @keyframes sc-weight { 0%, 20% { font-weight: 300; } 45%, 55% { font-weight: 400; } 80%, 100% { font-weight: 700; } }
   /* the custom cursor replaces the arrow over the map, not over things you click */
   .has-scroll-cursor .canvas { cursor: none; }
   .has-scroll-cursor .canvas .label { cursor: pointer; }
@@ -461,14 +462,14 @@ dialog[open] { animation: pop .18s ease-out; }
   .stats-btn:active { background: #00702f; }
   .stats-btn:focus-visible { outline: 3px solid var(--pink); }
 
-  /* ---- home page on phones (mobile mockup) ---- */
-  .cover-bg { object-position: 0% 50%; }   /* figures-only side of the cover art */
-  .cover { padding: 0 0 var(--m-menu-h, 230px); place-items: center; }
-  .cover-center { margin-top: 0; width: 100%; }
-  .cover-title { font-size: clamp(56px, 17vw, 120px); background: none; padding: 0; }
+  /* ---- home page on phones: Figma "mobile version" (393 x 852) ---- */
+  .cover-bg { object-position: center; }   /* figures-only layer drawn for the phone frame */
+  .cover { place-items: center; }
+  .cover-center { margin-top: -96px; width: 100%; padding: 0; }
+  .cover-title { font-size: min(84px, 21.4vw); line-height: 1.19; background: none; padding: 0; }
   .cover-sub {
-    display: block; margin: 6px 0 0;
-    color: #fff; font-size: clamp(22px, 7vw, 34px); font-weight: 300; line-height: 1.2;
+    display: block; margin: -16px 0 0;
+    color: #fff; font-size: min(34px, 8.65vw); font-weight: 300; line-height: 1.19;
   }
   .cover .nav, .corner-about { display: none; }
 
@@ -476,41 +477,43 @@ dialog[open] { animation: pop .18s ease-out; }
     display: block;
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 5;
     padding-bottom: env(safe-area-inset-bottom);
+    transition: transform .45s cubic-bezier(.4,0,.2,1), opacity .45s ease;
   }
-  .m-row { display: flex; }
-  .m-top { justify-content: space-between; align-items: flex-end; }
-  .m-links .m-row + .m-row { margin-top: -1px; }
+  .m-menu.is-closed { transform: translateY(100%); opacity: 0; pointer-events: none; }
+  .m-row { display: flex; direction: ltr; }   /* cells listed left → right as in Figma */
+  .m-row + .m-row { margin-top: -0.94px; }
   .press {
     font-family: inherit; font-weight: 300; color: #fff;
-    border: 1px solid #fff; cursor: pointer;
+    border: 0.94px solid #fff; cursor: pointer; border-radius: 0;
     -webkit-tap-highlight-color: transparent;
-    transition: font-weight .05s;
   }
   .press:active, .press.is-pressed { font-weight: 700; }   /* bold while pressing */
+  .m-link, .m-credits, .m-close { direction: rtl; margin: 0 0 0 -0.94px; }
+  .m-row > :first-child { margin-left: 0; }
   .m-link {
-    flex: 1 1 auto;
+    flex: 0 0 calc(var(--w) / 393 * 100%);
     display: flex; align-items: center; justify-content: center;
-    min-height: 64px; padding: 0 12px; margin-inline-start: -1px;
-    background: rgba(98, 70, 68, .78);
-    font-size: clamp(16px, 4.9vw, 21px);
+    height: 53px; padding: 0 4px;
+    background: rgba(95, 110, 95, .66);
+    font-size: min(21.89px, 5.57vw);
     text-decoration: none; white-space: nowrap;
   }
   .m-credits {
-    width: 50%; min-height: 58px;
+    flex: 0 0 calc(322 / 393 * 100%); height: 48px; padding: 0;
     background: var(--green);
-    font-size: clamp(18px, 5.3vw, 23px); font-weight: 700;   /* drawn bold in the mockup */
+    font-size: min(23.39px, 5.95vw); font-weight: 700;
   }
+  .m-credits.is-pressed, .m-credits:active { background: #00702f; }
   .m-close {
-    width: 88px; min-height: 52px; margin: 0 0 4px 0;
-    background: rgba(140, 118, 118, .7);
-    font-size: 22px; font-weight: 700; text-transform: lowercase;
+    flex: 1 1 auto; height: 48px; padding: 0;
+    background: rgba(138, 138, 138, .67);
+    font-size: 30px; line-height: 1; font-family: Arial, sans-serif;
   }
-  .m-menu.is-collapsed .m-links { display: none; }
-  .m-menu.is-collapsed .m-close { font-size: 17px; }
 
   /* dialogs: close button inside the screen */
   .dialog-close { top: 8px; left: 8px; }
   .info-dialog .dialog-close { top: -22px; left: -10px; }
-  .about .info-body { padding: 18px 20px; font-size: 14px; line-height: 1.5; }
+  .about { aspect-ratio: auto; }
+  .about .info-body { padding: 30px 22px 26px; font-size: 16px; line-height: 1.6; }
   .panel-img { height: min(819px, calc(100dvh - 32px)); }
 }

@@ -29,9 +29,7 @@ Repo **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 3. Commit and push.
 
 ## Font
-The design uses **NextExitFOT** (commercial). With a web licence, put `NextExitFOT-Light.woff2`,
-`-Regular.woff2` and `-Bold.woff2` in `site/assets/fonts/` and add the `url(...)` line noted at the top
-of `site/assets/css/style.css`. Until then visitors see **Heebo**.
+The site uses **NextExitFOT** ("היציאה הבאה" by הגילדה), self-hosted from `site/assets/fonts/` (credited in the credits popup).
 
 ## Preview locally
 ```bash
