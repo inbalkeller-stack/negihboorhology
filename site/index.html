@@ -25,13 +25,11 @@
   <div class="intro-buttons">
     <button class="intro-btn small" type="button" data-dialog="about-dialog">אודות</button>
     <button class="intro-btn start" type="button" id="intro-start">התחלה</button>
-    <button class="intro-btn small" type="button" data-dialog="credits-dialog">מאת</button>
   </div>
 </div>
 <main class="cover">
   <img class="cover-bg" src="assets/img/cover.webp" alt="" fetchpriority="high">
   <button class="corner-btn corner-about" type="button" data-dialog="about-dialog">אודות</button>
-  <button class="corner-btn corner-by" type="button" data-dialog="credits-dialog">מאת</button>
   <div class="cover-center">
     <h1 class="cover-title">שכונולוגיה</h1>
     <nav class="nav" aria-label="שכונות"><ul><li><a href="neve-sharet/">נווה שרת/שיכון דן</a></li><li><a href="ramat-aviv/">רמת אביב/כוכב הצפון</a></li><li><a href="old-north/">הצפון הישן</a></li><li><a href="lev-tlv/">לב ת״א</a></li><li><a href="florentin/">פלורנטין</a></li><li><a href="neve-shaanan/">נווה שאנן</a></li><li><a href="yad-eliyahu/">יד אליהו/התקווה</a></li><li><a href="shapira/">שפירא/קריית שלום</a></li><li><a class="nav-next" href="neve-sharet/" aria-label="לשכונה הראשונה" title="לשכונה הראשונה">&larr;</a></li></ul></nav>
@@ -41,18 +39,11 @@
 <dialog class="info-dialog about" id="about-dialog" aria-labelledby="about-title">
   <button class="dialog-close" type="button" aria-label="סגירה">&times;</button>
   <div class="info-body">
-    <p id="about-title">מאת: ענבל קלר</p>
-    <p>הספר יצא לאור בקורס איור ספרים, בהנחיית נעמה בנזימן, המכון הטכנולוגי חולון, 17.2.2026</p>
-    <p>הנתונים הופקו מדו״ח עיריית תל אביב באתר open data, על ממצאים סוציו אקונומיים, דמוגרפיים ופיזיים אודות השכונות השונות בעיר.</p>
-  </div>
-</dialog>
-
-<dialog class="info-dialog credits" id="credits-dialog" aria-label="קרדיטים">
-  <button class="dialog-close" type="button" aria-label="סגירה">&times;</button>
-  <div class="info-body">
-    <p>איורים מאת ענבל קלר.</p>
-    <p>הופק במסגרת קורס איור ספרים בהנחיית נעמה בנזימן,</p>
-    <p>המכון הטכנולוגי חולון hit</p>
+    <p class="strong" id="about-title">איורים מאת ענבל קלר.</p>
+    <p class="strong">הופק במסגרת קורס איור ספרים בהנחיית נעמה בנזימן,</p>
+    <p class="strong">המכון הטכנולוגי חולון hit.</p>
+    <p>כלל הנתונים נלקחו מאתר open data של עיריית תל אביב.</p>
+    <p>טיפוגרפיה: היציאה הבאה, מאת הגילדה</p>
   </div>
 </dialog>
 <script src="assets/js/main.js" defer></script>

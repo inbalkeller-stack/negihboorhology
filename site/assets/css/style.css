@@ -253,7 +253,7 @@ dialog[open] { animation: pop .18s ease-out; }
   box-shadow: 0 10px 40px rgba(0,0,0,.3);
 }
 
-/* about ("על הספר") and credits ("קרדיטים") */
+/* about panel */
 .info-dialog .info-body {
   padding: 21px 24px;
   border: 1px solid #fff;
@@ -263,21 +263,37 @@ dialog[open] { animation: pop .18s ease-out; }
 }
 .info-body p { margin: 0; }
 .about .info-body {
-  width: min(646px, calc(100vw - 32px));
-  background: #fff;
-  color: var(--green);
+  /* Figma "קרדיטים": green box, white text, first three lines bold */
+  width: min(1000px, calc(100vw - 32px));
+  padding: clamp(28px, 6vw, 80px) clamp(22px, 6vw, 96px);
+  background: var(--green);
+  border: 2px solid #fff;
+  color: #fff;
+  font-size: clamp(19px, 2.3vw, 36px);
   font-weight: 300;
+  line-height: 1.45;
   text-align: right;
 }
-.about .info-body p:first-child { margin-bottom: 0; }
-.about .info-body p + p:last-child { margin-top: 1.25em; }
-.credits .info-body {
-  background: var(--green);
-  color: #fff;
-  font-weight: 400;
-  text-align: center;
-}
+.about .info-body .strong { font-weight: 700; }
 
+
+
+/* ---------- Push-from-top transitions ---------- */
+/* between pages (cross-document View Transitions; browsers without support just navigate) */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: vt-push-out .55s cubic-bezier(.65, 0, .35, 1) both; }
+::view-transition-new(root) { animation: vt-push-in .55s cubic-bezier(.65, 0, .35, 1) both; }
+@keyframes vt-push-in  { from { transform: translateY(-100%); } }
+@keyframes vt-push-out { to   { transform: translateY(100%); } }
+
+/* the אודות panel drops in from the top */
+.info-dialog[open] { animation: drop-in .55s cubic-bezier(.2, .8, .2, 1); }
+@keyframes drop-in { from { transform: translateY(-100vh); } }
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+  ::view-transition-old(root), ::view-transition-new(root), .info-dialog[open] { animation: none; }
+}
 
 /* ---------- Loading animation (Figma frames 10:126 → 10:937) ---------- */
 :root {

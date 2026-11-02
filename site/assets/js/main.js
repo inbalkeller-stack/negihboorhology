@@ -35,13 +35,19 @@
     var start = document.getElementById("intro-start");
     var done = function () {
       try { sessionStorage.setItem("introSeen", "1"); } catch (e) {}
-      intro.classList.add("is-leaving");
       document.body.style.overflow = "";
-      setTimeout(function () { intro.remove(); }, 700);
+      var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (document.startViewTransition && !reduce) {
+        // the home page pushes in from the top, like the page-to-page transition
+        document.startViewTransition(function () { intro.remove(); });
+      } else {
+        intro.classList.add("is-leaving");
+        setTimeout(function () { intro.remove(); }, 700);
+      }
     };
     start.addEventListener("click", done);
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" && document.body.contains(intro) && !document.querySelector("dialog[open]")) done();
+      if (e.key === "Enter" && document.body.contains(intro) && !intro.classList.contains("is-leaving") && !document.querySelector("dialog[open]")) done();
     });
   }
 

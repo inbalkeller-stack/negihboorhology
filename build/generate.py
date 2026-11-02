@@ -141,7 +141,6 @@ def build_intro():
   <div class="intro-buttons">
     <button class="intro-btn small" type="button" data-dialog="about-dialog">אודות</button>
     <button class="intro-btn start" type="button" id="intro-start">התחלה</button>
-    <button class="intro-btn small" type="button" data-dialog="credits-dialog">מאת</button>
   </div>
 </div>
 """
@@ -154,7 +153,6 @@ def build_home():
     h += f"""<main class="cover">
   <img class="cover-bg" src="assets/img/cover.webp" alt="" fetchpriority="high">
   <button class="corner-btn corner-about" type="button" data-dialog="about-dialog">אודות</button>
-  <button class="corner-btn corner-by" type="button" data-dialog="credits-dialog">מאת</button>
   <div class="cover-center">
     <h1 class="cover-title">{SITE_TITLE}</h1>
     {nav(0)}
@@ -164,18 +162,11 @@ def build_home():
 <dialog class="info-dialog about" id="about-dialog" aria-labelledby="about-title">
   <button class="dialog-close" type="button" aria-label="סגירה">&times;</button>
   <div class="info-body">
-    <p id="about-title">מאת: ענבל קלר</p>
-    <p>הספר יצא לאור בקורס איור ספרים, בהנחיית נעמה בנזימן, המכון הטכנולוגי חולון, 17.2.2026</p>
-    <p>הנתונים הופקו מדו״ח עיריית תל אביב באתר open data, על ממצאים סוציו אקונומיים, דמוגרפיים ופיזיים אודות השכונות השונות בעיר.</p>
-  </div>
-</dialog>
-
-<dialog class="info-dialog credits" id="credits-dialog" aria-label="קרדיטים">
-  <button class="dialog-close" type="button" aria-label="סגירה">&times;</button>
-  <div class="info-body">
-    <p>איורים מאת ענבל קלר.</p>
-    <p>הופק במסגרת קורס איור ספרים בהנחיית נעמה בנזימן,</p>
-    <p>המכון הטכנולוגי חולון hit</p>
+    <p class="strong" id="about-title">איורים מאת ענבל קלר.</p>
+    <p class="strong">הופק במסגרת קורס איור ספרים בהנחיית נעמה בנזימן,</p>
+    <p class="strong">המכון הטכנולוגי חולון hit.</p>
+    <p>כלל הנתונים נלקחו מאתר open data של עיריית תל אביב.</p>
+    <p>טיפוגרפיה: היציאה הבאה, מאת הגילדה</p>
   </div>
 </dialog>
 """
